@@ -1,4 +1,4 @@
-import React from "react";
+import {useState} from "react";
 import {
   FaTimes,
   FaHome,
@@ -8,7 +8,9 @@ import {
   FaBars,
 } from "react-icons/fa";
 
-const SideBar = ({ setIsSidebarOpen, isSidebarOpen }) => {
+
+const SideBar = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   return (
     <aside
       className={`bg-white shadow-md p-4 transition-all duration-300 ${
@@ -32,14 +34,14 @@ const SideBar = ({ setIsSidebarOpen, isSidebarOpen }) => {
       </div>
       <nav className="mt-6">
         {[
-          { icon: <FaHome />, label: "Home" },
-          { icon: <FaCog />, label: "Settings" },
-          { icon: <FaUser />, label: "Profile" },
-          { icon: <FaQrcode />, label: "Show QrCode" },
+          { icon: <FaHome />, label: "Home", href: "/" },
+          { icon: <FaCog />, label: "Settings", href:"/settings" },
+          { icon: <FaUser />, label: "Profile", href:"/profile" },
+          { icon: <FaQrcode />, label: "Show QrCode", href:"/qr" },
         ].map((item, index) => (
           <a
             key={index}
-            href="#"
+            href={item.href}
             className={`flex items-center gap-3 rounded-lg text-gray-700 hover:bg-gray-200 ${isSidebarOpen ? "p-3" : "mb-4 w-8 h-8 justify-center"}`}
           >
             {item.icon}

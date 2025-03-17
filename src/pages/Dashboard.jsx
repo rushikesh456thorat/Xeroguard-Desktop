@@ -1,17 +1,12 @@
 import React, { useState } from "react";
-import {
-
-  FaChevronDown,
-  FaChevronUp,
-  FaFilePdf,
-  FaImage,
-} from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaFilePdf, FaImage } from "react-icons/fa";
 import FileItem from "../components/FileItem";
 import SideBar from "../components/SideBar";
+import PageTitle from "../components/PageTitle";
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   const [expandedUser, setExpandedUser] = useState(null); // Track expanded user
 
   const user = {
@@ -27,13 +22,13 @@ const Dashboard = () => {
         {
           name: "Report.pdf",
           type: "pdf",
-          copies:2,
+          copies: 2,
           url: "https://archive.nptel.ac.in/assets/ia_assets/pdf/Guidelines%20on%20enrolling%20to%20NPTEL%20Online%20Certification%20Courses.pdf",
         },
         {
           name: "Design.png",
           type: "image",
-          copies:3,
+          copies: 3,
           url: "https://nimbusweb.me/wp-content/uploads/2023/05/Contractor-Agreement-791x1024.png",
         },
       ],
@@ -44,7 +39,7 @@ const Dashboard = () => {
         {
           name: "Invoice.pdf",
           type: "pdf",
-          copies:4,
+          copies: 4,
           url: "https://archive.nptel.ac.in/assets/ia_assets/pdf/Guidelines%20on%20enrolling%20to%20NPTEL%20Online%20Certification%20Courses.pdf",
         },
       ],
@@ -67,22 +62,11 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex bg-gray-100 min-h-screen">
-      {/* Sidebar */}
-    <SideBar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen}/>
+    <>
+      <SideBar />
 
       <main className="flex-1 p-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
-          <div className="flex items-center gap-3">
-            <img
-              src={user.profileUrl}
-              alt="Profile"
-              className="w-10 h-10 rounded-full"
-            />
-            <span className="text-gray-700">{user.userName}</span>
-          </div>
-        </div>
+        <PageTitle userObject={user} pageTitle={"Dashboard"} />
         <div className="mt-4">
           <input
             type="text"
@@ -124,10 +108,10 @@ const Dashboard = () => {
                             <span className="text-gray-600">{file.copies}</span>
                           </div>
                           <div className="mt-2 flex gap-3">
-                            <button className="text-blue-600 hover:text-blue-500">
+                            <button className="text-blue-600 hover:text-blue-500 cursor-pointer">
                               Preview
                             </button>
-                            <button className="text-gray-600 hover:text-gray-500">
+                            <button className="text-gray-600 hover:text-gray-500 cursor-pointer">
                               Print
                             </button>
                           </div>
@@ -141,7 +125,7 @@ const Dashboard = () => {
           ))}
         </div>
       </main>
-    </div>
+    </>
   );
 };
 
