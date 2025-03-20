@@ -36,7 +36,6 @@ const SideBar = () => {
         {[
           { icon: <FaHome />, label: "Home", href: "/" },
           { icon: <FaCog />, label: "Settings", href:"/settings" },
-          { icon: <FaUser />, label: "Profile", href:"/profile" },
           { icon: <FaQrcode />, label: "Show QrCode", href:"/qr" },
         ].map((item, index) => (
           <a

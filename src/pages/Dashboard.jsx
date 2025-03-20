@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { FaChevronDown, FaChevronUp, FaFilePdf, FaImage } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import FileItem from "../components/FileItem";
 import SideBar from "../components/SideBar";
 import PageTitle from "../components/PageTitle";
+import printJS from "print-js";
+import Preview from "../components/Preview";
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
-
   const [expandedUser, setExpandedUser] = useState(null); // Track expanded user
+  const [selectedFile, setSelectedFile] = useState(null); // Track selected file for preview
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false); // Track if preview modal is open
 
   const user = {
     userName: "Rushikesh Thorat",
@@ -23,7 +26,7 @@ const Dashboard = () => {
           name: "Report.pdf",
           type: "pdf",
           copies: 2,
-          url: "https://archive.nptel.ac.in/assets/ia_assets/pdf/Guidelines%20on%20enrolling%20to%20NPTEL%20Online%20Certification%20Courses.pdf",
+          url: "/src/assets/x.pdf",
         },
         {
           name: "Design.png",
@@ -40,7 +43,7 @@ const Dashboard = () => {
           name: "Invoice.pdf",
           type: "pdf",
           copies: 4,
-          url: "https://archive.nptel.ac.in/assets/ia_assets/pdf/Guidelines%20on%20enrolling%20to%20NPTEL%20Online%20Certification%20Courses.pdf",
+          url: "/src/assets/x.pdf",
         },
       ],
     },
@@ -61,10 +64,38 @@ const Dashboard = () => {
     setExpandedUser(expandedUser === userName ? null : userName);
   };
 
+  const handlePrint = (fileType, fileUrl) => {
+    if (fileType === "pdf") {
+      fetch(fileUrl)
+        .then((response) => response.blob())
+        .then((blob) => {
+          printJS(URL.createObjectURL(blob), "pdf");
+        })
+        .catch((error) => {
+          console.error("Error fetching or printing PDF:", error);
+        });
+    } else if (fileType === "image") {
+      try {
+        printJS(fileUrl, "image");
+      } catch (error) {
+        console.error("Error printing image:", error);
+      }
+    }
+  };
+
+  const handlePreviewClick = (file) => {
+    setSelectedFile(file);
+    setIsPreviewOpen(true);
+  };
+
+  const handleClosePreview = () => {
+    setIsPreviewOpen(false);
+    setSelectedFile(null);
+  };
+
   return (
     <>
       <SideBar />
-
       <main className="flex-1 p-6">
         <PageTitle userObject={user} pageTitle={"Dashboard"} />
         <div className="mt-4">
@@ -108,10 +139,16 @@ const Dashboard = () => {
                             <span className="text-gray-600">{file.copies}</span>
                           </div>
                           <div className="mt-2 flex gap-3">
-                            <button className="text-blue-600 hover:text-blue-500 cursor-pointer">
+                            <button
+                              onClick={() => handlePreviewClick(file)}
+                              className="text-blue-600 hover:text-blue-500 cursor-pointer"
+                            >
                               Preview
                             </button>
-                            <button className="text-gray-600 hover:text-gray-500 cursor-pointer">
+                            <button
+                              className="text-gray-600 hover:text-gray-500 cursor-pointer"
+                              onClick={()=>handlePrint(file.type, file.url)}
+                            >
                               Print
                             </button>
                           </div>
@@ -125,6 +162,15 @@ const Dashboard = () => {
           ))}
         </div>
       </main>
+
+      {/* Preview Modal */}
+      {isPreviewOpen && selectedFile && (
+        <Preview
+          fileType={selectedFile.type}
+          fileUrl={selectedFile.url}
+          onClose={handleClosePreview}
+        />
+      )}
     </>
   );
 };
